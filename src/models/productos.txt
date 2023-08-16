@@ -1,0 +1,91 @@
+[{
+		"title": "Teclado 1",
+		"description": "Descripcion de tecldo 1",
+		"price": 120,
+		"thumbnail": "imgen1.png",
+		"code": "TEC01",
+		"stock": 37,
+		"id": 1
+	},
+	{
+		"title": "Teclado 2",
+		"description": "Descripcion de tecldo 2",
+		"price": 110,
+		"thumbnail": "imgen2.png",
+		"code": "TEC02",
+		"stock": 25,
+		"id": 2
+	},
+	{
+		"title": "Teclado 3",
+		"description": "Descripcion de tecldo 3",
+		"price": 105,
+		"thumbnail": "imgen3.png",
+		"code": "TEC03",
+		"stock": 57,
+		"id": 3
+	},
+	{
+		"title": "Teclado 4",
+		"description": "Descripcion de tecldo 4",
+		"price": 84,
+		"thumbnail": "imgen4.png",
+		"code": "TEC04",
+		"stock": 35,
+		"id": 4
+	},
+	{
+		"title": "Teclado 5",
+		"description": "Descripcion de tecldo 5",
+		"price": 79,
+		"thumbnail": "imgen5.png",
+		"code": "TEC05",
+		"stock": 56,
+		"id": 5
+	},
+	{
+		"title": "Teclado 6",
+		"description": "Descripcion de tecldo 6",
+		"price": 46,
+		"thumbnail": "imgen6.png",
+		"code": "TEC06",
+		"stock": 8,
+		"id": 6
+	},
+	{
+		"title": "Teclado 7",
+		"description": "Descripcion de tecldo 7",
+		"price": 90,
+		"thumbnail": "imgen7.png",
+		"code": "TEC07",
+		"stock": 68,
+		"id": 7
+	},
+	{
+		"title": "Teclado 8",
+		"description": "Descripcion de tecldo 8",
+		"price": 58,
+		"thumbnail": "imgen8.png",
+		"code": "TEC08",
+		"stock": 80,
+		"id": 8
+	},
+	{
+		"title": "Teclado 9",
+		"description": "Descripcion de tecldo 9",
+		"price": 98,
+		"thumbnail": "imgen9.png",
+		"code": "TEC09",
+		"stock": 150,
+		"id": 9
+	},
+	{
+		"title": "Teclado 10",
+		"description": "Descripcion de tecldo 10",
+		"price": 79,
+		"thumbnail": "imgen10.png",
+		"code": "TEC10",
+		"stock": 37,
+		"id": 10
+	}
+]
