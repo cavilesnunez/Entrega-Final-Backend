@@ -53,9 +53,8 @@
         socket.on('newProduct', (prod) => {
             console.log(prod)
             //Deberia agregarse al txt o json mediante addProduct
+            productManager.addProduct(prod);
         })
-
-
 
 
     })
@@ -66,25 +65,7 @@
     app.use('/api/product', productsRouter)
     //HBS
     app.get('/static', (req, res) => {
-        // const user = {
-        //     nombre: "Lucia",
-        //     cargo: "Tutor"
-        // }
 
-        // const cursos = [
-        //     { numCurso: "123", dia: "LyM", horario: "Noche" },
-        //     { numCurso: "456", dia: "MyJ", horario: "Tarde" },
-        //     { numCurso: "789", dia: "S", horario: "Mañana" }
-        // ]
-
-        //Indicar que plantilla voy a utilizar
-        /*res.render("users", {
-            titulo: "Users",
-            usuario: user,
-            rutaCSS: "users.css",
-            isTutor: user.cargo == "Tutor",
-            cursos: cursos
-        })*/
 
         res.render("realTimeProducts", {
             rutaCSS: "realTimeProducts",
@@ -93,6 +74,15 @@
 
     })
 
+    app.get('/api/product', (req, res) => {
+
+
+        res.render("index", {
+            rutaCSS: "index",
+            rutaJS: "index"
+        })
+
+    })
 
 
 
