@@ -3,6 +3,10 @@
     import { ProductManager } from './controllers/productManager.js';
     import cartRouter from './routes/cart.routes.js';
     import { Server } from 'socket.io';
+    import { __dirname } from './path.js'
+    import { engine } from 'express-handlebars'
+    import  productsRouter from './routes/products.routes.js'
+    import path from 'path'
 
     const PORT = 4000;
     const app = express();
@@ -12,12 +16,21 @@
     //Server
     const server = app.listen(PORT, () => {
         console.log(`Servidor escuchando en el puerto ${PORT}`);
-
-
     });
 
 
     const io = new Server(server)
+
+
+    //Middlewares
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true })) //URL extensas
+
+    app.engine('handlebars', engine()) //Defino que voy a trabajar con hbs y guardo la config
+    app.set('view engine', 'handlebars')
+    app.set('views', path.resolve(__dirname, './views'))
+
+    // const upload = multer({ storage: storage })
 
 
     //Conexion de Socket.io
@@ -26,16 +39,55 @@
 
         socket.on('mensaje', info => {
             console.log(info)
-            socket.emit('respuesta', true)
+            socket.emit('respuesta', false)
         })
 
-
         socket.on('juego', (infoJuego) => {
-            if (infoJuego == "poker") 
-            console.log("Conexion a poker")
+            if (infoJuego == "poker")
+                console.log("Conexion a Poker")
             else
                 console.log("Conexion a Truco")
         })
+
+        socket.on('nuevoProducto', (prod) => {
+            console.log(prod)
+            //Deberia agregarse al txt o json mediante addProduct
+
+            socket.emit("mensajeProductoCreado", "El producto se creo correctamente")
+        })
+    })
+
+
+    //Routes
+    app.use('/static', express.static(path.join(__dirname, '/public'))) //path.join() es una concatenacion de una manera mas optima que con el +
+    app.use('/api/product', productsRouter)
+    //HBS
+    app.get('/static', (req, res) => {
+        // const user = {
+        //     nombre: "Lucia",
+        //     cargo: "Tutor"
+        // }
+
+        // const cursos = [
+        //     { numCurso: "123", dia: "LyM", horario: "Noche" },
+        //     { numCurso: "456", dia: "MyJ", horario: "Tarde" },
+        //     { numCurso: "789", dia: "S", horario: "Mañana" }
+        // ]
+
+        //Indicar que plantilla voy a utilizar
+        /*res.render("users", {
+            titulo: "Users",
+            usuario: user,
+            rutaCSS: "users.css",
+            isTutor: user.cargo == "Tutor",
+            cursos: cursos
+        })*/
+
+        res.render("realTimeProducts", {
+            rutaCSS: "realTimeProducts",
+            rutaJS: "realTimeProducts"
+        })
+
     })
 
 
@@ -46,8 +98,8 @@
     // Registra el router de carritos en el servidor
     app.use('/api/carts', cartRouter);
 
-    const productFilePath = 'src/models/productos.txt';
-    const cartFilePath = 'src/models/cart.txt';
+    const productFilePath = 'src/models/productos.json';
+    const cartFilePath = 'src/models/cart.json';
 
     const productManager = new ProductManager(productFilePath);
     const cartManager = new CartManager(cartFilePath);
