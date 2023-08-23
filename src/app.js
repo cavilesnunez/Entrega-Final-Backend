@@ -12,10 +12,31 @@
     //Server
     const server = app.listen(PORT, () => {
         console.log(`Servidor escuchando en el puerto ${PORT}`);
+
+
     });
 
 
     const io = new Server(server)
+
+
+    //Conexion de Socket.io
+    io.on("connection", (socket) => {
+        console.log("Conexion con Socket.io")
+
+        socket.on('mensaje', info => {
+            console.log(info)
+            socket.emit('respuesta', true)
+        })
+
+
+        socket.on('juego', (infoJuego) => {
+            if (infoJuego == "poker") 
+            console.log("Conexion a poker")
+            else
+                console.log("Conexion a Truco")
+        })
+    })
 
 
 
@@ -110,9 +131,3 @@
     }
     });
 
-    //Conexion de Socket.io
-    io.on("connection", (socket) => {
-        console.log("Conexion con Socket.io")
-
-
-    })
