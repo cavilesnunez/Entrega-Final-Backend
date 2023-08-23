@@ -1,18 +1,25 @@
-    import express from 'express';
+    // import express from 'express';
+    // import { CartManager } from '../controllers/cartManager.js';
+
+    // const cartRouter = express.Router();
+
+
+    import { Router } from 'express';
     import { CartManager } from '../controllers/cartManager.js';
 
-    const cartRouter = express.Router();
+    const cartRouter = Router();
+    const cartManager = new CartManager('./src/models/carts.json', './src/models/products.json');
 
     // Obtiene todos los carritos
     cartRouter.get('/', async (req, res) => {
-    const carts = await CartManager.getCarts();
+    const carts = await cartManager.getCarts();
     res.send(carts);
     });
 
     // Obtiene un carrito por su id
     cartRouter.get('/:cid', async (req, res) => {
     const cid = parseInt(req.params.cid, 10);
-    const cart = await CartManager.getCartById(cid);
+    const cart = await cartManager.getCartById(cid);
     if (cart) {
         res.json(cart);
     } else {
@@ -22,7 +29,7 @@
 
     // Crea un nuevo carrito
     cartRouter.post('/', async (req, res) => {
-    const cart = await CartManager.createCart();
+    const cart = await cartManager.createCart();
     res.json(cart);
     });
 
@@ -35,7 +42,7 @@
         res.status(404).json({ error: 'Producto no encontrado' });
         return;
     }
-    const cart = await CartManager.getCartById(cid);
+    const cart = await cartManager.getCartById(cid);
     if (!cart) {
         res.status(404).json({ error: 'Carrito no encontrado' });
         return;
@@ -44,7 +51,7 @@
         id: product.id,
         quantity: 1, // Inicializamos la cantidad en 1
     });
-    await CartManager.updateCart(cart);
+    await cartManager.updateCart(cart);
     res.json(cart);
     });
 
@@ -52,7 +59,7 @@
     cartRouter.put('/:cid/product/:pid', async (req, res) => {
     const cid = parseInt(req.params.cid, 10);
     const pid = parseInt(req.params.pid, 10);
-    const cart = await CartManager.getCartById(cid);
+    const cart = await cartManager.getCartById(cid);
     if (!cart) {
         res.status(404).json({ error: 'Carrito no encontrado' });
         return;
@@ -66,7 +73,7 @@
     }
     const product = cart.products[productIndex];
     product.quantity = req.body.quantity;
-    await CartManager.updateCart(cart);
+    await cartManager.updateCart(cart);
     res.json(cart);
     });
 
@@ -74,7 +81,7 @@
     cartRouter.delete('/:cid/product/:pid', async (req, res) => {
     const cid = parseInt(req.params.cid, 10);
     const pid = parseInt(req.params.pid, 10);
-    const cart = await CartManager.getCartById(cid);
+    const cart = await cartManager.getCartById(cid);
     if (!cart) {
         res.status(404).json({ error: 'Cart not found' });
         return;
@@ -87,7 +94,7 @@
         return;
     }
     cart.products.splice(productIndex, 1);
-    await CartManager.updateCart(cart);
+    await cartManager.updateCart(cart);
     res.json(cart);
     });
 

@@ -2,9 +2,23 @@
     import { CartManager } from './controllers/cartManager.js';
     import { ProductManager } from './controllers/productManager.js';
     import cartRouter from './routes/cart.routes.js';
+    import { Server } from 'socket.io';
 
+    const PORT = 4000;
     const app = express();
-    const PORT = 5000;
+    
+
+
+    //Server
+    const server = app.listen(PORT, () => {
+        console.log(`Servidor escuchando en el puerto ${PORT}`);
+    });
+
+
+    const io = new Server(server)
+
+
+
 
     app.use(express.urlencoded({ extended: true }));
 
@@ -96,6 +110,9 @@
     }
     });
 
-    app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
-    });
+    //Conexion de Socket.io
+    io.on("connection", (socket) => {
+        console.log("Conexion con Socket.io")
+
+
+    })
