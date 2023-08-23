@@ -7,6 +7,7 @@
     import { engine } from 'express-handlebars'
     import  productsRouter from './routes/products.routes.js'
     import path from 'path'
+    
 
     const PORT = 4000;
     const app = express();
@@ -49,12 +50,14 @@
                 console.log("Conexion a Truco")
         })
 
-        socket.on('nuevoProducto', (prod) => {
+        socket.on('newProduct', (prod) => {
             console.log(prod)
             //Deberia agregarse al txt o json mediante addProduct
-
-            socket.emit("mensajeProductoCreado", "El producto se creo correctamente")
         })
+
+
+
+
     })
 
 

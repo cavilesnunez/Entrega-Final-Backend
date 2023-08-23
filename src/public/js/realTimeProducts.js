@@ -9,11 +9,16 @@ form.addEventListener('submit', event => {
 	event.preventDefault();
 	const dataForm = new FormData(event.target);
 	const product = Object.fromEntries(dataForm);
-	Swal.fire({
-		title: 'Producto creado',
-	});
-
 	socket.emit('newProduct', product);
+
+	socket.on('mensajeProductoCreado', (mensaje) => {
+		Swal.fire({
+			title: 'Producto creado',
+		});
+
+	})
+	event.target.reset()
+
 });
 
 socket.on('products', products => {
