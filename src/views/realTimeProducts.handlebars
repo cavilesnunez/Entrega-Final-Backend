@@ -1,28 +1,43 @@
 <h1>Crear Producto</h1>
-
 <main>
+	<form id='formProduct' class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-4/12">
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='title'>
+					Title
+				</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='text' name='title' required />
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='description'>
+					Description</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='text' name='description' required />
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='price'>
+					Price</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='number' name='price' required />
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='status'>
+					Status</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='text' name='status' required />
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='code'>
+					Code</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='text' name='code' required />
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for='stock'>
+					Stock</label>
+				<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type='number' name='stock' required />
+			</div>
 
-	<form id='formProduct'>
-		<label for='title'>Title</label>
-		<input type='text' name='title' required />
-
-		<label for='description'>Description</label>
-		<input type='text' name='description' required />
-
-		<label for='price'>Price</label>
-		<input type='number' name='price' required />
-
-		<label for='status'>Status</label>
-		<input type='text' name='status' required />
-
-		<label for='code'>Code</label>
-		<input type='text' name='code' required />
-
-		<label for='stock'>Stock</label>
-		<input type='number' name='stock' required />
-
-		<button type='submit'>Crear Producto</button>
+			<div class="flex items-center justify-between">
+				<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type='submit'>
+					Crear Producto
+				</button>
+			</div>
 	</form>
-
 	<div id='products-container'></div>
 </main>
