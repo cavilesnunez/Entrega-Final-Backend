@@ -62,27 +62,29 @@
 
     //Routes
     app.use('/static', express.static(path.join(__dirname, '/public'))) //path.join() es una concatenacion de una manera mas optima que con el +
-    app.use('/api/product', productsRouter)
+    app.use('/productsList', productsRouter)
     //HBS
     app.get('/static', (req, res) => {
 
 
         res.render("realTimeProducts", {
-            rutaCSS: "realTimeProducts",
-            rutaJS: "realTimeProducts"
         })
 
     })
 
-    app.get('/api/product', (req, res) => {
-
-
-        res.render("index", {
-            rutaCSS: "index",
-            rutaJS: "index"
-        })
-
-    })
+    app.get('/productsList', async (req, res) => {
+        try {
+            const products = await ProductManager.getProducts();
+            
+            res.render("productsList", {
+                products: products
+            });
+        } catch (error) {
+            console.error("Error al obtener los productos:", error);
+        }
+    });
+    
+    
 
 
 
