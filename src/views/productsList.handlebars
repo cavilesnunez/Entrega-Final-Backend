@@ -1,6 +1,6 @@
 
     <h1>Lista de Productos</h1>
-    <div id="products-container">
+    <div id="products">
         <table class="min-w-full bg-white border border-gray-300">
             <thead>
                 <tr class="bg-gray-100">
@@ -16,13 +16,13 @@
             <tbody>
                 {{#each products}}
                 <tr class="{{@index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}}">
-                    <td class="py-2 px-4">{{prod.id}}</td>
-                    <td class="py-2 px-4">{{prod.title}}</td>
-                    <td class="py-2 px-4">{{prod.description}}</td>
-                    <td class="py-2 px-4">{{prod.price}}</td>
-                    <td class="py-2 px-4">{{prod.thumbnail}}</td>
-                    <td class="py-2 px-4">{{prod.code}}</td>
-                    <td class="py-2 px-4">{{prod.stock}}</td>
+                    <td class="py-2 px-4">{{this.id}}</td>
+                    <td class="py-2 px-4">{{this.title}}</td>
+                    <td class="py-2 px-4">{{this.description}}</td>
+                    <td class="py-2 px-4">{{this.price}}</td>
+                    <td class="py-2 px-4">{{this.thumbnail}}</td>
+                    <td class="py-2 px-4">{{this.code}}</td>
+                    <td class="py-2 px-4">{{this.stock}}</td>
                 </tr>
                 {{/each}}
             </tbody>
