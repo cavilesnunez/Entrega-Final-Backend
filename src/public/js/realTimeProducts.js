@@ -1,23 +1,19 @@
-const socket = io();
+const socket = io()
 
-const form = document.querySelector('#formProduct');
-const productsContainer = document.querySelector('#products-container');
+const form = document.getElementById('formProduct')
 
-socket.emit('load');
+form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const datForm = new FormData(e.target) //El formulario que disparo el evento
+    const prod = Object.fromEntries(datForm) //Dado un objeto iterable, te devuelvo sus datos en un objeto simple
+    socket.emit('nuevoProducto', prod)
+    socket.on('mensajeProductoCreado', (mensaje) => {
 
-form.addEventListener('submit', event => {
-	event.preventDefault();
-	const dataForm = new FormData(event.target);
-	const product = Object.fromEntries(dataForm);
-	socket.emit('newProduct', product);
+        Swal.fire(
+            mensaje
+        )
+    })
+    e.target.reset()
+})
 
-	socket.on('mensajeProductoCreado', (mensaje) => {
-		Swal.fire({
-			title: 'Producto creado',
-		});
-
-	})
-	event.target.reset()
-
-});
 

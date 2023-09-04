@@ -43,48 +43,52 @@
             socket.emit('respuesta', false)
         })
 
-        socket.on('juego', (infoJuego) => {
-            if (infoJuego == "poker")
-                console.log("Conexion a Poker")
-            else
-                console.log("Conexion a Truco")
-        })
-
-        socket.on('newProduct', (prod) => {
+        socket.on('nuevoProducto', (prod) => {
             console.log(prod)
-            //Deberia agregarse al txt o json mediante addProduct
             productManager.addProduct(prod);
-        })
-
-
-    })
-
-
-    //Routes
-    app.use('/static', express.static(path.join(__dirname, '/public'))) //path.join() es una concatenacion de una manera mas optima que con el +
-    app.use('/productsList', productsRouter)
-    //HBS
-    app.get('/static', (req, res) => {
-
-
-        res.render("realTimeProducts", {
-        })
-
-    })
-
-    app.get('/productsList', async (req, res) => {
-        try {
-            const products = await ProductManager.getProducts();
+    
+            socket.emit("mensajeProductoCreado", "El producto se creo correctamente")
             
-            res.render("productsList", {
-                products: products
-            });
-        } catch (error) {
-            console.error("Error al obtener los productos:", error);
-        }
+        })
+
+
+    })
+
+
+// Routes
+app.use('/static', express.static(path.join(__dirname, '/public'))) 
+app.use('/productsList', express.static(path.join(__dirname, '/public')))
+// app.use('/productsList', productsRouter)
+
+// HBS
+app.get('/static', (req, res) => {
+    res.render("realTimeProducts", {
+        rutaCSS: "realTimeProducts",
+        rutaJS: "realTimeProducts"
     });
-    
-    
+});
+
+
+app.get('/productsList', async (req, res) => {
+    res.render('productsList', {
+        rutaCSS: "productsList",
+        rutaJS: "productsList",
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
