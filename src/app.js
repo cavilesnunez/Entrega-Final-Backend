@@ -35,7 +35,7 @@ import messageRouter from './routes/messages.routes.js'
     app.set('views', path.resolve(__dirname, './views'))
 
 
-    app.use('/api/products', productsRouter)
+    
     // MongoDB Atlas connection
     // conexión con base de datos
 
@@ -45,7 +45,7 @@ import messageRouter from './routes/messages.routes.js'
     )
     .then(() => console.log('DB conectada'))
     .catch(error => console.log(`Error en conexión a MongoDB Atlas:  ${error}`));
-
+    app.use('/products', productsRouter)
 
     // mongoose.connect(process.env.MONGO_URL)
     // .then (async () => {

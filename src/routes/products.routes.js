@@ -1,82 +1,102 @@
 import { Router } from 'express'
-import { ProductManager } from '../controllers/productManager.js'
-import { productModel } from '../models/product.model.js'
-
-const productManager = new ProductManager('./src/models/productos.json');
+import productsModel from '../models/product.model.js';
 
 const productRouter = Router()
 
-//Ruta GET para obtener productos
+//Get All Products
 productRouter.get('/', async (req, res) => {
+    let { limit, page, category, status, sort } = req.query
+    let sortOption;
+	sort == 'asc' && (sortOption = 'price');
+	sort == 'desc' && (sortOption = '-price');
+    try {
+        const options = {
+            limit: limit || 10,
+            page: page || 1,
+            sort: sortOption || null,
+        };
+        const query = {};
+            category && (query.category = category);
+            status && (query.status = status);
+        
+        const prods = await productsModel.paginate(query, options)
+        res.status(200).send({ result: 'OK', message: prods })
+    } catch (error) {
+        res.status(400).send({ error: `Error displaying products:  ${error}` })
+    }
+})
+
+// Get Product By Id
+productRouter.get("/:pid", async (req, res) => {
+    const { pid } = req.params;
+    try {
+        const prod = await productsModel.findById(pid);
+        if (prod)
+            res.status(200).send({ resultado: 'ok', message: prod });
+        else
+            res.status(404).send({ resultado: 'Not Found', message: prod });
+
+    } catch (error) {
+        res.status(400).send({ error: `Error al consultar productos: ${error}` });
+    };
+});
+
+
+
+//Add Product
+productRouter.post("/", async (req, res) => {
+    const { title, description, stock, code, price, category } = req.body;
+
+    try {
+        const respuesta = await productsModel.create({
+            title, description, stock, code, price, category
+        });
+        res.status(200).send({ resultado: 'ok', message: respuesta });
+    } catch (error) {
+        res.status(400).send({ error: `Error al crear el producto: ${error}` });
+    };
+}); 
+
+
+
+//Update Product
+productRouter.put("/:pid", async (req, res) => {
+    const { pid } = req.params
+    const { title, description, stock, code, price, category, status } = req.body;
+
+    try {
+        const prod = await productsModel.findByIdAndUpdate(pid, {
+            title, description, stock, code, price, category, status
+        });
+
+        if (prod !== null && prod !== undefined) {
+            res.status(200).send({ resultado: 'ok', message: prod });
+        } else {
+            res.status(404).send({ resultado: 'Not Found', message: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        res.status(400).send({ error: `Error al actualizar productos: ${error}` });
+    }
+}); 
+
+
+
+//Delete Product
+productRouter.delete("/:pid", async (req, res)=>{
+    const {pid} = req.params;
     
     try {
-        const products = await productModel.find()
-        res.status(200).send(products)
-    } catch (error) {
-        res.status(400).send("Error al consultar productos", error)
+        const prod = await productsModel.findByIdAndDelete(pid);
         
-    }
+        if (prod)
+            res.status(200).send({resultado: 'ok', message: prod });
+        else
+        res.status(404).send({resultado: 'Not Found', message: prod });
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // const { limit } = req.query
+}catch (error){
+    res.status(400).send({error: `Error al eliminar productos: ${error}`});
+};
+}); 
 
-    // const prods = await productManager.getProducts()
-    // const products = prods.slice(0, limit)
-    // res.status(200).send(products)
 
-})
-
-//Ruta GET para obtener un producto por ID
-productsRouter.get('/:id', async (req, res) => {
-    const { id } = req.params
-    const prod = await productManager.getProductById(parseInt(id))
-
-    if (prod)
-        res.status(200).send(prod)
-    else
-        res.status(404).send("Producto no existente")
-})
-
-//Ruta POST para crear un nuevo producto
-productsRouter.post('/', async (req, res) => {
-    const confirmacion = await productManager.addProduct(req.body)
-
-    if (confirmacion)
-        res.status(200).send("Producto creado correctamente")
-    else
-        res.status(400).send("Producto ya existente")
-})
-
-//Ruta PUT para actualizar un producto existente
-productsRouter.put('/:id', async (req, res) => {
-
-    const confirmacion = await productManager.updateProduct(req.params.id, req.body)
-
-    if (confirmacion)
-        res.status(200).send("Producto actualizado correctamente")
-    else
-        res.status(404).send("Producto no encontrado")
-
-})
-
-//Ruta DELETE para eliminar un producto por ID
-productsRouter.delete('/:id', async (req, res) => {
-
-    const confirmacion = await productManager.deleteProduct(req.params.id)
-
-    if (confirmacion)
-        res.status(200).send("Producto eliminado correctamente")
-    else
-        res.status(404).send("Producto no encontrado")
-})
-
-export default productsRouter
+export default productRouter;
