@@ -27,9 +27,3 @@ socket.on('datagrid', data => {
         productsContainer.appendChild(productDiv);
     });
 });
-
-
-
-
-
-

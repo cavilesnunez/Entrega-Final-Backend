@@ -1,22 +1,25 @@
-    import express from 'express';
-    import { CartManager } from './controllers/cartManager.js';
-    import { ProductManager } from './controllers/productManager.js';
-    import cartRouter from './routes/cart.routes.js';
-    import { Server } from 'socket.io';
-    import { __dirname } from './path.js'
-    import { engine } from 'express-handlebars'
-    import  productsRouter from './routes/products.routes.js'
-    import path from 'path'
-    
+import express from 'express';
+import mongoose from 'mongoose'
+import { Server } from 'socket.io';
+import { engine } from 'express-handlebars'
+import { __dirname } from './path.js'
+import path from 'path'
+
+import { CartManager } from './controllers/cartManager.js';
+import { ProductManager } from './controllers/productManager.js';
+
+
+import cartRouter from './routes/cart.routes.js';
+import productsRouter from './routes/products.routes.js'
+import messageRouter from './routes/messages.routes.js'
+// import userRouter from './router/user.routes.js';
 
     const PORT = 4000;
     const app = express();
-    
-
 
     //Server
     const server = app.listen(PORT, () => {
-        console.log(`Servidor escuchando en el puerto ${PORT}`);
+        console.log(`Servidor escuchando en http://localhost:${PORT}`);
     });
 
 
@@ -31,17 +34,35 @@
     app.set('view engine', 'handlebars')
     app.set('views', path.resolve(__dirname, './views'))
 
-    // const upload = multer({ storage: storage })
 
+    app.use('/api/products', productsRouter)
+    // MongoDB Atlas connection
+    // conexión con base de datos
+
+    mongoose
+    .connect(
+        'mongodb+srv://carlosfavilesn:coderhouse@cluster0.p8nailk.mongodb.net/?retryWrites=true&w=majority'
+    )
+    .then(() => console.log('DB conectada'))
+    .catch(error => console.log(`Error en conexión a MongoDB Atlas:  ${error}`));
+
+
+    // mongoose.connect(process.env.MONGO_URL)
+    // .then (async () => {
+    //     console.log('BDD connected')
+    // })
+    // .catch((error) => console.log("Error connecting with MongoDB ATLAS: ", error))
 
     //Conexion de Socket.io
     io.on("connection", (socket) => {
         console.log("Conexion con Socket.io")
 
-        socket.on('mensaje', info => {
-            console.log(info)
-            socket.emit('respuesta', false)
+        socket.on('load', async () => {
+            const products = await productManager.paginate({}, { limit: 5 })
+    
+            socket.emit('products', products)
         })
+
 
         socket.on('nuevoProducto', (prod) => {
             console.log(prod)
@@ -52,44 +73,68 @@
         })
 
 
+        socket.on('deleteProduct', async (productId) => {
+            await productManager.findByIdAndDelete(productId)
+        
+            socket.emit('productDeletedMessage', "Product deleted successfully")
+        })
+
+
+        socket.on('mensaje', async info => {
+            const { message } = info
+    
+            await MessageModel.create({
+                message
+            })
+    
+        const messages = await MessageModel.find()
+    
+            socket.emit('mensajes', messages)
+        })
+
     })
 
 
 // Routes
-app.use('/static', express.static(path.join(__dirname, '/public'))) 
-app.use('/productsList', express.static(path.join(__dirname, '/public')))
-// app.use('/productsList', productsRouter)
+app.use('/static', express.static(path.join(__dirname, '/public')))
+app.use('/static/realtimeproducts', express.static(path.join(__dirname, '/public')))
+app.use('/static/realtimecarts', express.static(path.join(__dirname, '/public')))
+app.use('/static/chat', express.static(path.join(__dirname, '/public')))
+app.use('/api/products', productsRouter)
+app.use('/api/carts', cartRouter)
+app.use('/api/messages', messageRouter)
+
+
 
 // HBS
 app.get('/static', (req, res) => {
+    res.render("home", {
+        pathCSS: "home",
+        pathJS: "home"
+    })
+})
+
+
+app.get('/static/realtimeproducts', (req, res) => {
     res.render("realTimeProducts", {
-        rutaCSS: "realTimeProducts",
-        rutaJS: "realTimeProducts"
-    });
-});
+        pathCSS: "realTimeProducts",
+        pathJS: "realTimeProducts"
+    })
+})
 
+app.get('/static/realtimecarts', (req, res) => {
+    res.render("realTimeCarts", {
+        pathCSS: "realTimeCarts",
+        pathJS: "realTimeCarts"
+    })
+})
 
-app.get('/productsList', async (req, res) => {
-    res.render('productsList', {
-        rutaCSS: "productsList",
-        rutaJS: "productsList",
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.get('/static/chat', (req, res) => {
+    res.render("chat", {
+        pathCSS: "chat",
+        pathJS: "chat"
+    })
+})
 
 
     app.use(express.urlencoded({ extended: true }));
