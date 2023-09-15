@@ -1,32 +1,32 @@
 import { Schema, model } from 'mongoose';
-import paginate  from 'mongoose-paginate-v2';
+import paginate from 'mongoose-paginate-v2';
 
 const cartSchema = new Schema({
-		products: {
-			type: [
-					{
-						id_prod: { 
-							type: Schema.Types.ObjectId, // tipo id autogenerado de mongoDb
-							ref: 'products',
-							required: true,
-						},
-						quantity: {
-							type: Number,
-							required: true,
-						},
-					},
-				],
-				default: function () {
-					return [];
+	products: {
+		type: [
+			{
+				id_prod: {
+					type: Schema.Types.ObjectId, // tipo id autogenerado de mongoDb
+					ref: 'products',
+					required: true,
 				},
-			}		
-		});
-		//esto es el populate para que traiga el objeto completo
-		cartSchema.pre('find', function () { //utilizo findOne porque es un solo carrito
-				this.populate('products.id_prod')		
-		});
+				quantity: {
+					type: Number,
+					required: true,
+				},
+			},
+		],
+		default: function () {
+			return [];
+		},
+	}
+});
+//
+cartSchema.pre('find', function () { //
+	this.populate('products.id_prod')
+});
 
-		cartSchema.plugin(paginate);
+cartSchema.plugin(paginate);
 
 const cartModel = model('carts', cartSchema);
 export default cartModel;

@@ -37,7 +37,6 @@ import messageRouter from './routes/messages.routes.js'
 
     
     // MongoDB Atlas connection
-    // conexión con base de datos
 
     mongoose
     .connect(
@@ -47,11 +46,8 @@ import messageRouter from './routes/messages.routes.js'
     .catch(error => console.log(`Error en conexión a MongoDB Atlas:  ${error}`));
     app.use('/products', productsRouter)
 
-    // mongoose.connect(process.env.MONGO_URL)
-    // .then (async () => {
-    //     console.log('BDD connected')
-    // })
-    // .catch((error) => console.log("Error connecting with MongoDB ATLAS: ", error))
+
+
 
     //Conexion de Socket.io
     io.on("connection", (socket) => {
@@ -152,78 +148,78 @@ app.get('/static/chat', (req, res) => {
     res.send('Home');
     });
 
-    // Obtiene todos los productos
-    app.get('/products', async (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 0;
+    // // Obtiene todos los productos
+    // app.get('/products', async (req, res) => {
+    // const limit = req.query.limit ? parseInt(req.query.limit, 10) : 0;
 
-    try {
-        const products = await productManager.getProducts(limit);
-        res.send(products);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los productos' });
-    }
-    });
+    // try {
+    //     const products = await productManager.getProducts(limit);
+    //     res.send(products);
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Error al obtener los productos' });
+    // }
+    // });
 
-    // Obtiene un producto por su id
-    app.get('/products/:id', async (req, res) => {
-    const pid = parseInt(req.params.id, 10);
+    // // Obtiene un producto por su id
+    // app.get('/products/:id', async (req, res) => {
+    // const pid = parseInt(req.params.id, 10);
 
-    try {
-        const product = await productManager.getProductById(pid);
-        if (product) {
-        res.json(product);
-        } else {
-        res.status(404).json({ error: 'Producto no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener el producto' });
-    }
-    });
+    // try {
+    //     const product = await productManager.getProductById(pid);
+    //     if (product) {
+    //     res.json(product);
+    //     } else {
+    //     res.status(404).json({ error: 'Producto no encontrado' });
+    //     }
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Error al obtener el producto' });
+    // }
+    // });
 
-    // Crea un nuevo producto
-    app.post('/products', async (req, res) => {
-    const productData = req.body;
+    // // Crea un nuevo producto
+    // app.post('/products', async (req, res) => {
+    // const productData = req.body;
 
-    try {
-        const newProduct = await productManager.addProduct(productData);
-        res.status(201).json({ message: 'Producto agregado' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al agregar el producto' });
-    }
-    });
+    // try {
+    //     const newProduct = await productManager.addProduct(productData);
+    //     res.status(201).json({ message: 'Producto agregado' });
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Error al agregar el producto' });
+    // }
+    // });
 
-    // Actualiza un producto
-    app.put('/products/:pid', async (req, res) => {
-    const pid = parseInt(req.params.pid, 10);
-    const updatedData = req.body;
+    // // Actualiza un producto
+    // app.put('/products/:pid', async (req, res) => {
+    // const pid = parseInt(req.params.pid, 10);
+    // const updatedData = req.body;
 
-    try {
-        const product = await productManager.getProductById(pid);
-        if (product) {
-        await productManager.updateProduct(pid, updatedData);
-        res.status(200).json({ message: 'Producto actualizado' });
-        } else {
-        res.status(404).json({ error: 'Producto no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar el producto' });
-    }
-    });
+    // try {
+    //     const product = await productManager.getProductById(pid);
+    //     if (product) {
+    //     await productManager.updateProduct(pid, updatedData);
+    //     res.status(200).json({ message: 'Producto actualizado' });
+    //     } else {
+    //     res.status(404).json({ error: 'Producto no encontrado' });
+    //     }
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Error al actualizar el producto' });
+    // }
+    // });
 
-    // Elimina un producto
-    app.delete('/products/:pid', async (req, res) => {
-    const pid = parseInt(req.params.pid, 10);
+    // // Elimina un producto
+    // app.delete('/products/:pid', async (req, res) => {
+    // const pid = parseInt(req.params.pid, 10);
 
-    try {
-        const product = await productManager.getProductById(pid);
-        if (product) {
-        await productManager.deleteProduct(pid);
-        res.status(200).json({ message: 'Producto eliminado' });
-        } else {
-        res.status(404).json({ error: 'Producto no encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el producto' });
-    }
-    });
+    // try {
+    //     const product = await productManager.getProductById(pid);
+    //     if (product) {
+    //     await productManager.deleteProduct(pid);
+    //     res.status(200).json({ message: 'Producto eliminado' });
+    //     } else {
+    //     res.status(404).json({ error: 'Producto no encontrado' });
+    //     }
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Error al eliminar el producto' });
+    // }
+    // });
 

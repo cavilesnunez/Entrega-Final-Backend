@@ -38,7 +38,7 @@ cartRouter.post('/', async (req, res)=> {
     }
 });
 
-//add product to cart (agrega el producto ok y actualiza si existe)
+//add product to cart *
 cartRouter.put('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
@@ -66,7 +66,7 @@ cartRouter.put('/:cid/products/:pid', async (req, res) => {
     }
 });
 
-//update cart by id 
+//update cart by id *
 cartRouter.put('/:cid', async (req, res) => {
 	const { cid } = req.params;
 	const { updateProducts } = req.body;
