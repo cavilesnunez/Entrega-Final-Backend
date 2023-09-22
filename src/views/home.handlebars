@@ -1,42 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <title>Mi Tiendita de Teclados</title>
-</head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<h1>Bienvenidos al Home</h1>
 
-    <header class="p-4 text-black text-center">
-    <h1 class="text-3xl font-bold p-4 bg-white shadow-md">Productos</h1>
-    </header>
+{{#if products}}
+<h2>Nuestros productos</h2>
+<div class="container-product">
+    <div class="row">
+        {{#each products}}
+        <p>Id: {{this.id}}</p>
+        <p>Title: {{this.title}}</p>
+        <p>Description: {{this.description}}</p>
+        <p>Price: {{this.price}}</p>
+        <p>thumbnail: {{this.thumbnail}}</p>
+        <p>Code: {{this.code}}</p>
+        <p>Stock: {{this.stock}}</p>
+        <button id="{{this.id}}" class="btn-delete">Eliminar</button>
+        {{/each}}
+    </div>
+</div>
+{{else}}
+<h3>No agregaste ningún producto, por favor hacé click en el botón para generar productos</h3>
+<a href="./realtimeproducts"><button>Formulario</button></a>
+{{/if}}
 
-    <main class="container mx-auto p-4">
-        <div id="productsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Aquí puedes agregar tus productos -->
-            {{!-- <div class="bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold">Producto 1</h2>
-                <p class="text-gray-600">Descripción del producto 1.</p>
-                <p class="text-lg font-bold text-blue-500">$99.99</p>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-blue-600 transition duration-300">Agregar al carrito</button>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold">Producto 2</h2>
-                <p class="text-gray-600">Descripción del producto 2.</p>
-                <p class="text-lg font-bold text-blue-500">$79.99</p>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-blue-600 transition duration-300">Agregar al carrito</button>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold">Producto 3</h2>
-                <p class="text-gray-600">Descripción del producto 3.</p>
-                <p class="text-lg font-bold text-blue-500">$129.99</p>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-blue-600 transition duration-300">Agregar al carrito</button>
-            </div> --}}
-            <!-- Agrega más productos aquí -->
-        </div>
-    </main>
-</body>
-</html>
+<section class='pagination'>
+    <button id='prev-page-button'>Prev</button>
+    <span id='page-number'></span>
+    <button id='next-page-button'>Next</button>
+</section>

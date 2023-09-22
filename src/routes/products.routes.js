@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import productsModel from '../models/product.model.js';
+import productModel from '../models/product.model.js'
 
 const productRouter = Router()
 
@@ -19,7 +19,7 @@ productRouter.get('/', async (req, res) => {
             category && (query.category = category);
             status && (query.status = status);
         
-        const prods = await productsModel.paginate(query, options)
+        const prods = await productModel.paginate(query, options)
         res.status(200).send({ result: 'OK', message: prods })
     } catch (error) {
         res.status(400).send({ error: `Error displaying products:  ${error}` })
@@ -30,7 +30,7 @@ productRouter.get('/', async (req, res) => {
 productRouter.get("/:pid", async (req, res) => {
     const { pid } = req.params;
     try {
-        const prod = await productsModel.findById(pid);
+        const prod = await productModel.findById(pid);
         if (prod)
             res.status(200).send({ resultado: 'ok', message: prod });
         else
@@ -48,7 +48,7 @@ productRouter.post("/", async (req, res) => {
     const { title, description, stock, code, price, category } = req.body;
 
     try {
-        const respuesta = await productsModel.create({
+        const respuesta = await productModel.create({
             title, description, stock, code, price, category
         });
         res.status(200).send({ resultado: 'ok', message: respuesta });
@@ -65,7 +65,7 @@ productRouter.put("/:pid", async (req, res) => {
     const { title, description, stock, code, price, category, status } = req.body;
 
     try {
-        const prod = await productsModel.findByIdAndUpdate(pid, {
+        const prod = await productModel.findByIdAndUpdate(pid, {
             title, description, stock, code, price, category, status
         });
 
@@ -86,7 +86,7 @@ productRouter.delete("/:pid", async (req, res)=>{
     const {pid} = req.params;
     
     try {
-        const prod = await productsModel.findByIdAndDelete(pid);
+        const prod = await productModel.findByIdAndDelete(pid);
         
         if (prod)
             res.status(200).send({resultado: 'ok', message: prod });

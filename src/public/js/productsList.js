@@ -1,29 +1,45 @@
 const socket = io();
-const productsContainer = document.querySelector('.datagrid');
 
-socket.on('datagrid', data => {
-    const products = data.products;
+//const productsContainer = document.querySelector('#products-container');
+const pageNumber = document.querySelector('#page-number');
+const previousButton = document.querySelector('#prev-page-button');
+const nextButton = document.querySelector('#next-page-button');
+const mensaje = document.querySelector('#bienvenida');
 
+let page;
+let cartId;
 
-    // Limpiar el contenido anterior del contenedor
-    productsContainer.innerHTML = '';
+socket.emit('load');
+socket.on('products', data => {
+    
+	page = data.page;
+	pageNumber.innerText = page;
+	!data.hasPrevPage ? (previousButton.disabled = true) : (previousButton.disabled = false);
+	!data.hasNextPage ? (nextButton.disabled = true) : (nextButton.disabled = false);
 
-    // Crear y agregar elementos de producto al contenedor
-    products.forEach(prod => {
-        const productDiv = document.createElement('div');
-        //productDiv.classList.add('product'); 
-        console.log('Producto:', prod);
+	const addButtons = document.querySelectorAll('.add-button');
+	addButtons.forEach(button => {
+		button.addEventListener('click', e => {
+			const pid = e.target.id;
+			const data = { pid, cartId };
+			socket.emit('addProduct', data);
+		});
+	});
+});
 
-        productDiv.innerHTML = `
-            <p>Id: ${prod.id}</p>
-            <p>Title: ${prod.title}</p>
-            <p>Description: ${prod.description}</p>
-            <p>Price: ${prod.price}</p>
-            <p>Thumbnail: ${prod.thumbnail}</p>
-            <p>Code: ${prod.code}</p>
-            <p>Stock: ${prod.stock}</p>
-        `;
+previousButton.addEventListener('click', () => {
+	page--;
+	socket.emit('previousPage', page);
+});
 
-        productsContainer.appendChild(productDiv);
-    });
+nextButton.addEventListener('click', () => {
+	page++;
+	socket.emit('nextPage', page);
+});
+
+socket.on('success', cid => {
+	cartId = cid;
+	Swal.fire({
+		title: 'Producto agregado',
+	});
 });
