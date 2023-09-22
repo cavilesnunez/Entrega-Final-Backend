@@ -1,28 +1,32 @@
-<h1>Bienvenidos al Home</h1>
+<h1 class="text-4xl font-bold mb-6 text-center">Bienvenidos al Home</h1>
 
 {{#if products}}
-<h2>Nuestros productos</h2>
-<div class="container-product">
-    <div class="row">
+<h2 class="text-3xl font-semibold mb-4 text-center">Nuestros productos</h2>
+<div class="container-product mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {{#each products}}
-        <p>Id: {{this.id}}</p>
-        <p>Title: {{this.title}}</p>
-        <p>Description: {{this.description}}</p>
-        <p>Price: {{this.price}}</p>
-        <p>thumbnail: {{this.thumbnail}}</p>
-        <p>Code: {{this.code}}</p>
-        <p>Stock: {{this.stock}}</p>
-        <button id="{{this.id}}" class="btn-delete">Eliminar</button>
+        <div class="p-4 border rounded shadow">
+            <p class="mb-2"><span class="font-semibold">Id:</span> {{this.id}}</p>
+            <p class="mb-2"><span class="font-semibold">Title:</span> {{this.title}}</p>
+            <p class="mb-2"><span class="font-semibold">Description:</span> {{this.description}}</p>
+            <p class="mb-2"><span class="font-semibold">Price:</span> {{this.price}}</p>
+            <p class="mb-2"><span class="font-semibold">Thumbnail:</span> {{this.thumbnail}}</p>
+            <p class="mb-2"><span class="font-semibold">Code:</span> {{this.code}}</p>
+            <p class="mb-2"><span class="font-semibold">Stock:</span> {{this.stock}}</p>
+            <button id="{{this.id}}" class="btn-delete mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Eliminar</button>
+        </div>
         {{/each}}
     </div>
 </div>
 {{else}}
-<h3>No agregaste ningún producto, por favor hacé click en el botón para generar productos</h3>
-<a href="./realtimeproducts"><button>Formulario</button></a>
+<h3 class="text-2xl font-medium text-center mb-4">No agregaste ningún producto, por favor hacé click en el botón para generar productos</h3>
+<div class="text-center">
+    <a href="./realTimeProducts" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Formulario</a>
+</div>
 {{/if}}
 
-<section class='pagination'>
-    <button id='prev-page-button'>Prev</button>
-    <span id='page-number'></span>
-    <button id='next-page-button'>Next</button>
+<section class='pagination mt-8 flex justify-center items-center'>
+    <button id='prev-page-button' class="bg-gray-500 text-white px-4 py-2 rounded mr-2 hover:bg-gray-600">Prev</button>
+    <span id='page-number' class="mx-4"></span>
+    <button id='next-page-button' class="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-600">Next</button>
 </section>
