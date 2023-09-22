@@ -1,10 +1,10 @@
 <h1 class="text-4xl font-bold mb-6 text-center">Bienvenidos al Home</h1>
 
-{{#if products}}
+{{#if product}}
 <h2 class="text-3xl font-semibold mb-4 text-center">Nuestros productos</h2>
 <div class="container-product mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {{#each products}}
+        {{#each product}}
         <div class="p-4 border rounded shadow">
             <p class="mb-2"><span class="font-semibold">Id:</span> {{this.id}}</p>
             <p class="mb-2"><span class="font-semibold">Title:</span> {{this.title}}</p>
@@ -19,7 +19,7 @@
     </div>
 </div>
 {{else}}
-<h3 class="text-2xl font-medium text-center mb-4">No agregaste ningún producto, por favor hacé click en el botón para generar productos</h3>
+<h3 class="text-2xl font-medium text-center mb-4">No se encontraron productos. Ingresa uno.</h3>
 <div class="text-center">
     <a href="./realTimeProducts" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Formulario</a>
 </div>
