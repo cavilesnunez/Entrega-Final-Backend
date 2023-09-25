@@ -1,30 +1,14 @@
-import { Router } from "express";
-import { userModel } from "../models/users.model.js";
+import express from 'express';
+import * as userController from '../controllers/userController.js';
 
-const userRouter = Router();
+const router = express.Router();
 
-/* userRouter.get('/', async(req,res)=>{
-    try {
-        const users = await userModel.find()
-        res.status(200).send(users)
-    } catch (error) {
-        res.status(400).send({error:"Error al consultar por el usuario",error});
-    }
-}) */
+router.get('/login', userController.showLogin); 
+router.get('/register', userController.showRegister); 
 
-userRouter.post('/register', async(req,res)=>{
-    try {
-        const {first_name,lastname,email,password,age} = req.body
+router.post('/register', userController.postRegister); 
+router.post('/login', userController.postLogin); 
 
-        const resultado = await userModel.create({
-            first_name,lastname,email,password,age})
-        if(resultado){
-            res.redirect('/static/products', 200, { mensaje: 'Usuario creado', respuesta: first_name });
-            res.status(200).send({resultado:'Usuario creado correctamente'}) 
-        } 
-    } catch (error) {
-        res.status(400).send({error:'Error al crear el usuario:',error}) 
-    }
-})
+router.get('/logout', userController.getLogout); 
 
-export default userRouter;
+export default router;

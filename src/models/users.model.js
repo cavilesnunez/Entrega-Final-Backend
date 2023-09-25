@@ -1,33 +1,26 @@
-import { Schema, model } from "mongoose";
+import mongoose from 'mongoose';
 
-//Definición de mi esquema de datos
-const userSchema = new Schema({
-    first_name: {
-        required:true,
-        type:String,
-    },
-    lastname:{
-        required:true,
-        type:String,
-    },
-    email: {
-        required:true,
-        type:String,
-        index:true,
-        unique: true
-    },
-    password:{
-        required:true,      
-        type:String,
-    },
-    rol:{
-        type:String,
-        default:'user'
-    },
-    age:{
-        required:true,
-        type:Number,
+const userSchema = new mongoose.Schema({
+  fullname: { type: String, required: true },  
+  age: { type: Number, required: true },      
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'usuario'],
+    default: function () {
+        return this.email === 'adminCoder@coder.com' ? 'admin' : 'usuario';
     }
-})
+  }
+});
 
-export const userModel = model('users',userSchema)//Defino mi modelo con un nombre y el Schema
+const userModel = mongoose.model('User', userSchema);
+
+export default userModel;

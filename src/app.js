@@ -1,225 +1,170 @@
+import 'dotenv/config'
+import mongoose from 'mongoose';
 import express from 'express';
-import mongoose from 'mongoose'
+import session from 'express-session';
+import { engine } from 'express-handlebars';
+import MongoDBStore from 'connect-mongodb-session';
+import cookieParser from 'cookie-parser';
+import http from 'http';
 import { Server } from 'socket.io';
-import { engine } from 'express-handlebars'
-import { __dirname } from './path.js'
-import path from 'path'
+import productRoutes from './routes/products.routes.js';
+import cartRoutes from './routes/cart.routes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import productModel from './models/products.model.js';
+import messageModel from './models/messages.model.js';
+import userRoutes from './routes/users.routes.js';
+import { renderProducts } from './controllers/productController.js';
 
-import { CartManager } from './controllers/cartManager.js';
-import { ProductManager } from './controllers/productManager.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+const app = express();
+const port = 4000;
 
-import cartRouter from './routes/cart.routes.js';
-import productsRouter from './routes/products.routes.js'
-import messageRouter from './routes/messages.routes.js'
-// import userRouter from './router/user.routes.js';
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
-    const PORT = 4000;
-    const app = express();
+const db = mongoose.connection;
 
-    //Server
-    const server = app.listen(PORT, () => {
-        console.log(`Servidor escuchando en http://localhost:${PORT}`);
+db.on('error', console.error.bind(console, 'Error de conexión a MongoDB:'));
+db.once('open', () => {
+    console.log('Conexión exitosa a MongoDB.');
+});
+
+app.engine('handlebars', engine({
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views/layouts'),
+    partialsDir: path.join(__dirname, 'views/partials')
+}));
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static('public'));
+
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+const MongoDBSessionStore = MongoDBStore(session);
+
+const store = new MongoDBSessionStore({
+    uri: process.env.MONGO_URL,
+    collection: "session",
+});
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: { 
+        secure: false, 
+        maxAge: 60000
+    }
+}));
+
+app.use((req, res, next) => {
+    res.locals.user = req.session.user;
+    next();
+});
+
+app.get('/', renderProducts);
+app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
+
+app.use('/users', userRoutes);
+
+app.get('/users/profile', (req, res) => {
+    res.render('profile', { user: req.session.user });
+});
+
+app.get('/realtimeproducts', (req, res) => {
+    res.render('realtimeproducts');
+});
+
+app.post('/api/messages', async (req, res) => {
+    try {
+        const { email, message } = req.body;
+        const newMessage = new messageModel({ email, message });
+        await newMessage.save();
+        res.json(newMessage);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/messages', async (req, res) => {
+    try {
+        const messages = await messageModel.find();
+        res.json(messages);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/messages/:messageId', async (req, res) => {
+    try {
+        const messageId = req.params.messageId;
+        const deletedMessage = await messageModel.findByIdAndDelete(messageId);
+
+        if (!deletedMessage) {
+            return res.status(404).json({ error: 'Mensaje no encontrado' });
+        }
+
+        res.status(200).send("Mensaje eliminado correctamente.");
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    path: '/socket.io'
+});
+
+io.on('connection', (socket) => {
+    console.log('Cliente conectado');
+
+    socket.on('createProduct', async (productData) => {
+        try {
+            const newProduct = await productModel.create(productData);
+            io.emit('productCreated', newProduct);
+        } catch (error) {
+            console.error("Error al crear el producto:", error);
+        }
     });
 
-
-    const io = new Server(server)
-
-
-    //Middlewares
-    app.use(express.json())
-    app.use(express.urlencoded({ extended: true })) //URL extensas
-
-    app.engine('handlebars', engine()) //Defino que voy a trabajar con hbs y guardo la config
-    app.set('view engine', 'handlebars')
-    app.set('views', path.resolve(__dirname, './views'))
-
-
-    
-    // MongoDB Atlas connection
-
-    mongoose
-    .connect(
-        'mongodb+srv://carlosfavilesn:coderhouse@cluster0.p8nailk.mongodb.net/?retryWrites=true&w=majority'
-    )
-    .then(() => console.log('DB conectada'))
-    .catch(error => console.log(`Error en conexión a MongoDB Atlas:  ${error}`));
-    app.use('/products', productsRouter)
-
-
-
-
-    //Conexion de Socket.io
-    io.on("connection", (socket) => {
-        console.log("Conexion con Socket.io")
-
-        socket.on('load', async () => {
-            const products = await productManager.paginate({}, { limit: 5 })
-    
-            socket.emit('products', products)
-        })
-
-
-        socket.on('nuevoProducto', (prod) => {
-            console.log(prod)
-            productManager.addProduct(prod);
-    
-            socket.emit("mensajeProductoCreado", "El producto se creo correctamente")
-            
-        })
-
-
-        socket.on('deleteProduct', async (productId) => {
-            await productManager.findByIdAndDelete(productId)
-        
-            socket.emit('productDeletedMessage', "Product deleted successfully")
-        })
-
-
-        socket.on('mensaje', async info => {
-            const { message } = info
-    
-            await MessageModel.create({
-                message
-            })
-    
-        const messages = await MessageModel.find()
-    
-            socket.emit('mensajes', messages)
-        })
-
-    })
-
-
-// Routes
-app.use('/static', express.static(path.join(__dirname, '/public')))
-app.use('/static/realtimeproducts', express.static(path.join(__dirname, '/public')))
-app.use('/static/realtimecarts', express.static(path.join(__dirname, '/public')))
-app.use('/static/chat', express.static(path.join(__dirname, '/public')))
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartRouter)
-app.use('/api/messages', messageRouter)
-
-
-
-// HBS
-app.get('/static', (req, res) => {
-    res.render("home", {
-        pathCSS: "home",
-        pathJS: "home"
-    })
-})
-
-
-app.get('/static/realtimeproducts', (req, res) => {
-    res.render("realTimeProducts", {
-        pathCSS: "realTimeProducts",
-        pathJS: "realTimeProducts"
-    })
-})
-
-app.get('/static/realtimecarts', (req, res) => {
-    res.render("realTimeCarts", {
-        pathCSS: "realTimeCarts",
-        pathJS: "realTimeCarts"
-    })
-})
-
-app.get('/static/chat', (req, res) => {
-    res.render("chat", {
-        pathCSS: "chat",
-        pathJS: "chat"
-    })
-})
-
-
-    app.use(express.urlencoded({ extended: true }));
-
-    // Registra el router de carritos en el servidor
-    app.use('/api/carts', cartRouter);
-
-    const productFilePath = 'src/models/productos.json';
-    const cartFilePath = 'src/models/cart.json';
-
-    const productManager = new ProductManager(productFilePath);
-    const cartManager = new CartManager(cartFilePath);
-
-    app.get('/', (req, res) => {
-    res.send('Home');
+    socket.on('deleteProduct', async (productId) => {
+        try {
+            await productModel.findByIdAndDelete(productId);
+            io.emit('productDeleted', productId);
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error);
+        }
     });
 
-    // // Obtiene todos los productos
-    // app.get('/products', async (req, res) => {
-    // const limit = req.query.limit ? parseInt(req.query.limit, 10) : 0;
+    socket.on('updateProduct', async (updatedProductData) => {
+        try {
+            const { productId, updatedFields } = updatedProductData;
+            const updatedProduct = await productModel.findByIdAndUpdate(
+                productId,
+                updatedFields,
+                { new: true }
+            );
+            io.emit('productUpdated', updatedProduct);
+        } catch (error) {
+            console.error("Error al actualizar el producto:", error);
+        }
+    });
+});
 
-    // try {
-    //     const products = await productManager.getProducts(limit);
-    //     res.send(products);
-    // } catch (error) {
-    //     res.status(500).json({ error: 'Error al obtener los productos' });
-    // }
-    // });
+server.listen(port, () => {
+    console.log(`Servidor escuchando en http://localhost:${port}`);
+});
 
-    // // Obtiene un producto por su id
-    // app.get('/products/:id', async (req, res) => {
-    // const pid = parseInt(req.params.id, 10);
-
-    // try {
-    //     const product = await productManager.getProductById(pid);
-    //     if (product) {
-    //     res.json(product);
-    //     } else {
-    //     res.status(404).json({ error: 'Producto no encontrado' });
-    //     }
-    // } catch (error) {
-    //     res.status(500).json({ error: 'Error al obtener el producto' });
-    // }
-    // });
-
-    // // Crea un nuevo producto
-    // app.post('/products', async (req, res) => {
-    // const productData = req.body;
-
-    // try {
-    //     const newProduct = await productManager.addProduct(productData);
-    //     res.status(201).json({ message: 'Producto agregado' });
-    // } catch (error) {
-    //     res.status(500).json({ error: 'Error al agregar el producto' });
-    // }
-    // });
-
-    // // Actualiza un producto
-    // app.put('/products/:pid', async (req, res) => {
-    // const pid = parseInt(req.params.pid, 10);
-    // const updatedData = req.body;
-
-    // try {
-    //     const product = await productManager.getProductById(pid);
-    //     if (product) {
-    //     await productManager.updateProduct(pid, updatedData);
-    //     res.status(200).json({ message: 'Producto actualizado' });
-    //     } else {
-    //     res.status(404).json({ error: 'Producto no encontrado' });
-    //     }
-    // } catch (error) {
-    //     res.status(500).json({ error: 'Error al actualizar el producto' });
-    // }
-    // });
-
-    // // Elimina un producto
-    // app.delete('/products/:pid', async (req, res) => {
-    // const pid = parseInt(req.params.pid, 10);
-
-    // try {
-    //     const product = await productManager.getProductById(pid);
-    //     if (product) {
-    //     await productManager.deleteProduct(pid);
-    //     res.status(200).json({ message: 'Producto eliminado' });
-    //     } else {
-    //     res.status(404).json({ error: 'Producto no encontrado' });
-    //     }
-    // } catch (error) {
-    //     res.status(500).json({ error: 'Error al eliminar el producto' });
-    // }
-    // });
-
+export { io };

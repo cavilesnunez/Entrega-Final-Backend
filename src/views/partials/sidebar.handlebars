@@ -1,0 +1,47 @@
+<aside class="hidden lg:block bg-black shadow-md fixed top-0 left-0 h-full w-52 z-50 text-white">
+    <div class="flex flex-col h-full justify-between">
+        
+        <!-- Logo Section -->
+        <div class="p-1 flex items-center justify-center">
+            <a href="/">
+                <img src='https://entrega-final-react-js-carlos-aviles-af6jeh8bj-cavilesnunez.vercel.app/logo.png' alt="KeebMx Logo" class="w-auto h-12">
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex flex-col  flex-grow px-10 py-8">
+            <ul class="space-y-4">
+                {{#if user}}
+
+                    <li>
+                        <a href="/" class="block py-2 hover:bg-slate-800">Ver Productos</a>
+                    </li>
+                    <li>
+                        <a href="/users/profile" class="block py-2 hover:bg-slate-800">Perfil</a>
+                    </li>
+                    <li>
+                        <a href="/api/products" class="block py-2 hover:bg-slate-800">API Productos</a>
+                    </li>
+                    <li>
+                        <a href="/api/carts" class="block py-2 hover:bg-slate-800">API Carritos</a>
+                    </li>
+                    <li>
+                        <a href="/api/messages" class="block py-2 hover:bg-slate-800">API Mensajes</a>
+                    </li>
+                {{else}}
+                    <li>
+                        <a href="/" class="block py-2 hover:bg-slate-800">
+                            Enlace 1
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/" class="block py-2 hover:bg-slate-800">
+                            Enlace 2
+                        </a>
+                    </li>
+                {{/if}}
+            </ul>
+        </nav>
+
+    </div>
+</aside>

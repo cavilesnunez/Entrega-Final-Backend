@@ -1,0 +1,47 @@
+
+
+    <div class="max-w-6xl mx-auto p-12">
+
+        {{#if user}}
+        <h2 class="text-center text-black-900 text-2xl mb-4">Welcome, {{user.fullname}}!</h2>
+        {{else}}
+        <h2 class="text-center text-yellow-500 text-2xl mb-4"></h2>
+        {{/if}}
+
+        <table class="min-w-full bg-white border border-gray-300 mt-12 divide-y divide-gray-300">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Name</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Description</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Code</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Photo</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Price</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-600">Stock</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                {{#each products}}
+                <tr>
+                    <td class="py-4 px-4 border-gray-300">{{this.title}}</td>
+                    <td class="py-4 px-4 border-gray-300">{{this.description}}</td>
+                    <td class="py-4 px-4 border-gray-300">{{this.code}}</td>
+                    <td class="py-4 px-4 border-gray-300">
+                        <img src="{{this.imgSrc}}" class="w-20 h-20 object-cover rounded-md shadow-md" alt="product">
+                    </td>
+                    <td class="py-4 px-4 border-gray-300">${{this.price}}</td>
+                    <td class="py-4 px-4 border-gray-300">{{this.stock}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <div class="my-4 flex justify-center space-x-2">
+            {{#if hasPrevPage}}
+            <a href="?page={{prevPage}}" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">Página previa</a>
+            {{/if}}
+
+            {{#if hasNextPage}}
+            <a href="?page={{nextPage}}" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">Página siguiente</a>
+            {{/if}}
+        </div>
+    </div>
