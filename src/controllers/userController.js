@@ -17,14 +17,14 @@ export const showRegister = (req, res) => {
 };
 
 export const postRegister = async (req, res) => {
-    const { email, password, fullname, age } = req.body;
+    const { email, password, first_name, last_name, age } = req.body;
 
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
         return res.render('register', { error: 'El correo electrónico ya está registrado' });
     }
 
-    const user = new userModel({ email, password, fullname, age });
+    const user = new userModel({ email, password, first_name, last_name, age });
     await user.save();
 
     req.session.user = user;

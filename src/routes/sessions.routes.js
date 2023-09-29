@@ -1,6 +1,4 @@
 import { Router } from "express";
-import { userModel } from "../models/users.model.js";
-import { validatePassword } from "../utils/bcrypt.js";
 import passport from "passport";
 const sessionRouter = Router()
 
@@ -20,6 +18,16 @@ sessionRouter.post('/login', passport.authenticate('login'), async (req, res) =>
         res.status(200).send({ payload: req.user })
     } catch (error) {
         res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` })
+    }
+})
+
+sessionRouter.get('/testJWT', passport.authenticate('jwt', { session: true }), async (req, res) => {
+    res.status(200).send({ mensaje: req.user })
+    req.session.user = {
+        first_name: req.user.user.first_name,
+        last_name: req.user.user.last_name,
+        age: req.user.user.age,
+        email: req.user.user.email
     }
 })
 
