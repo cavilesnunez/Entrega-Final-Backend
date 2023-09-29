@@ -98,7 +98,7 @@ export const deleteProduct = async (req, res) => {
 
 export const renderProducts = async (req, res) => {
     try {
-        const { page = 1, limit = 5 } = req.query;
+        const { page = 1, limit = 6 } = req.query;
         const options = {
             page: parseInt(page),
             limit: parseInt(limit),
