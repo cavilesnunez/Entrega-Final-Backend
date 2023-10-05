@@ -12,6 +12,8 @@ import { engine } from 'express-handlebars'; // Motor de plantillas Handlebars
 import session from 'express-session'; // Middleware para gestionar sesiones
 import cookieParser from 'cookie-parser'; // Middleware para analizar cookies
 import MongoDBStore from 'connect-mongodb-session'; // Almacén de sesiones para MongoDB
+import passport from 'passport';
+import initializePassport from './config/passport.js';
 
 // Importación de rutas y controladores
 import productRoutes from './routes/products.routes.js'; // Rutas relacionadas con productos
@@ -57,6 +59,7 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
+
 app.use(express.static('public'));
 
 app.use(express.json());
@@ -84,6 +87,10 @@ app.use(session({
         maxAge: 60000
     }
 }));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
     res.locals.user = req.session.user;

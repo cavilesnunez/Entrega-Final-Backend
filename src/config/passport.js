@@ -2,7 +2,8 @@ import local from 'passport-local' //Estrategia
 import passport from 'passport' //Manejador de las estrategias
 import GithubStrategy from 'passport-github2'
 import { createHash, validatePassword } from '../utils/bcrypt.js'
-import { userModel } from '../models/users.models.js'
+import userModel from '../models/users.model.js';
+
 
 
 //Defino la estrategia a utilizar
@@ -38,6 +39,8 @@ const initializePassport = () => {
         }
     ))
 
+
+    
     passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
         try {
             const user = await userModel.findOne({ email: username })
