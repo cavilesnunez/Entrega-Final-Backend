@@ -73,6 +73,7 @@ const initializePassport = () => {
             console.log(refreshToken)
             console.log(process.env.CALLBACK_URL)
             const user = await userModel.findOne({ email: profile._json.email })
+            console.log(user)
             if (!user) {
                 const userCreated = await userModel.create({
                     first_name: profile._json.name,

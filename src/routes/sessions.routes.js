@@ -31,35 +31,18 @@ sessionRouter.get('/testJWT', passport.authenticate('jwt', { session: true }), a
     }
 })
 
-// sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {
-//     res.status(200).send({ mensaje: 'Usuario creado' })
-// })
-
-
-
-
-// sessionRouter.get('/githubSession', passport.authenticate('github'), async (req, res) => {
-//     req.session.user = req.user
-//     res.status(200).send({ mensaje: 'Session creada' })
-// })
-
-
-// sessionRouter.get('/github', passport.authenticate('github'));
-
-sessionRouter.get('/github', passport.authenticate('github', { 
-    successRedirect: '/', 
-    failureRedirect: '/users/login', 
-}));
-
-
-
-
-sessionRouter.get('/logout', (req, res) => {
-    if (req.session) {
-        req.session.destroy()
-    }
-    console.log(req.session)
-    res.status(200).send({ resultado: 'Login eliminado' })
+sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {
+    console.log(req.user)
+    res.status(200).send({ mensaje: 'Usuario creado' })
 })
+
+
+
+
+sessionRouter.get('/githubSession', passport.authenticate('github'), async (req, res) => {
+    req.session.user = req.user
+    res.status(200).send({ mensaje: 'Session creada' })
+})
+
 
 export default sessionRouter
