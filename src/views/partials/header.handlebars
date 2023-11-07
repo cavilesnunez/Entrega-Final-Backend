@@ -1,0 +1,32 @@
+<header class="bg-white shadow-md fixed top-0 inset-x-0 z-50">
+    <nav class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-end"> <!-- Cambié justify-between a justify-end -->
+
+            <div class="flex items-center">
+                <button class="lg:hidden flex items-center mr-8"> <!-- Agregué un margen derecho para separarlo del menú -->
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <ul class="hidden lg:flex space-x-8">
+                    {{#if user}}
+                        <li>
+                            <a href="/users/profile" class="text-gray-700 hover:text-indigo-600">Profile ({{user.first_name}})</a>
+                        </li>
+                        <li>
+                            <a href="/users/logout" class="text-gray-700 hover:text-indigo-600">Exit</a>
+                        </li>
+                    {{else}}
+                        <li>
+                            <a href="/users/login" class="text-gray-700 hover:text-indigo-600">Log In</a>
+                        </li>
+                        <li>
+                            <a href="/users/register" class="text-gray-700 hover:text-indigo-600">Sign Up</a>
+                        </li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+

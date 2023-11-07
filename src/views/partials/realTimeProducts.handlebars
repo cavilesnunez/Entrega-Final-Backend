@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Products</title>
+</head>
+
+<body>
+    <h1>Real-Time Products</h1>
+    <h2>Agregar Nuevo Producto</h2>
+    <form id="addProductForm">
+        <label for="title">Título:</label>
+        <input type="text" id="title" name="title" required>
+        <label for="price">Precio:</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+        <button type="submit">Agregar Producto</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Establecer la conexión WebSocket
+        const socket = io();
+
+        // Escuchar el evento 'productCreated' y actualizar la lista en tiempo real
+        socket.on('productCreated', (newProduct) => {
+            const productList = document.querySelector('ul');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${newProduct.title} - ${newProduct.price}`;
+            listItem.setAttribute('data-product-id', newProduct.id);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.setAttribute('data-product-id', newProduct.id);
+            deleteButton.textContent = 'Eliminar';
+            deleteButton.style.backgroundColor = 'pink';
+
+            deleteButton.addEventListener('click', () => {
+                const productId = listItem.getAttribute('data-product-id');
+                socket.emit('deleteProduct', productId);
+            });
+
+            listItem.appendChild(deleteButton);
+            productList.appendChild(listItem);
+        });
+
+        socket.on('productDeleted', (deletedProductId) => {
+            console.log('Producto eliminado:', deletedProductId);
+            const productList = document.querySelector('ul');
+            const listItem = productList.querySelector(`[data-product-id="${deletedProductId}"]`);
+
+            if (listItem) {
+                productList.removeChild(listItem);
+            }
+        });
+
+        const addProductForm = document.getElementById('addProductForm');
+        addProductForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const price = parseFloat(document.getElementById('price').value);
+
+            socket.emit('createProduct', { title, price });
+
+            addProductForm.reset();
+        });
+    </script>
+</body>
+
+</html>

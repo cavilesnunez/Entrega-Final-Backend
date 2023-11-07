@@ -1,0 +1,19 @@
+.form-container{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 50%;
+    height: auto;
+    margin-top: 1em;
+    padding: 0.625rem;
+    background-color: rgb(231, 231, 231);
+    border: 1px solid black;
+}
+.card-title { 
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    margin-top: 0.625rem;
+}

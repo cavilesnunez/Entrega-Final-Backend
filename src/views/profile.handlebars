@@ -1,0 +1,29 @@
+<head>
+    <title>Perfíl</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-6 rounded-lg shadow-md">
+            <div class="text-center">
+                <h2 class="mt-1 text-3xl font-extrabold text-gray-900">
+                    Profile
+                </h2>
+            </div>
+            <div class="flex flex-col items-center">
+                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" class="rounded-full w-32 mx-auto shadow-lg" alt="user image">
+                <h2 class="mt-4 text-2xl font-semibold text-gray-800">{{user.first_name}} {{user.last_name}}</h2>
+                <p class="text-gray-500">Tu email es <span class="font-bold text-gray-800">{{user.email}}</span></p>
+                <p class="text-gray-500">Tu rol es <span class="font-bold text-gray-800">{{user.rol}}</span></p>
+
+                <div class="mt-6 text-center">
+                    <button class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+                        Editar Perfil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+

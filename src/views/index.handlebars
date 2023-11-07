@@ -1,0 +1,39 @@
+<div class="max-w-6xl mx-auto p-12">
+
+    {{#if user}}
+    <h2 class="text-center text-black-900 text-2xl mb-4">Welcome, {{user.first_name}}!</h2>
+    {{else}}
+    <h2 class="text-center text-yellow-500 text-2xl mb-4"></h2>
+    {{/if}}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-12">
+        {{#each products}}
+        <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer">
+            <a href="#">
+                <img alt="product" src="https://loremflickr.com/80/80" class="max-h-40 w-full object-cover"/>
+            </a>
+            <div class="bg-white p-4">
+                <p class="text-blue-500 text-md font-semibold">{{this.title}}</p>
+                <p class="text-gray-800 text-xs mt-1">{{this.description}}</p>
+            </div>
+            <div class="flex items-center justify-between px-4 py-2 bg-white">
+                <h1 class="text-gray-800 font-bold text-sm">Code: {{this.code}}</h1>
+                <h1 class="text-gray-800 font-bold text-sm">Price: ${{this.price}}</h1>
+            </div>
+            <div class="px-4 py-2 bg-white">
+                <h1 class="text-gray-800 font-bold text-sm">Stock: {{this.stock}}</h1>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="my-4 flex justify-center space-x-2">
+        {{#if hasPrevPage}}
+        <a href="?page={{prevPage}}" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">Página previa</a>
+        {{/if}}
+
+        {{#if hasNextPage}}
+        <a href="?page={{nextPage}}" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">Página siguiente</a>
+        {{/if}}
+    </div>
+</div>
