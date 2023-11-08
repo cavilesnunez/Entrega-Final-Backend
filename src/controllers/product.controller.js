@@ -1,4 +1,17 @@
 import Product from '../models/products.model.js';
+import CustomError from '../utils/customError.js';
+import {errorMessages} from '../utils/messageErrors.js';
+
+
+export const createProduct = async (req, res, next) => {
+    try {
+      // Lógica para crear producto
+    } catch (error) {
+      next(new CustomError(400, errorMessages.PRODUCT_CREATION_ERROR));
+    }
+  };
+
+
 
 export const getProducts = async (req, res) => {
     try {

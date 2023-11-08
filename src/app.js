@@ -10,7 +10,7 @@ import initializePassport from './config/passport.js';
 import setupWebSocket from './sockets/index.js';
 import mainRouter from './routes/index.js';
 import { renderProducts } from './controllers/product.controller.js'; // Asegúrate de que esta función esté definida en este archivo
-
+import { errorHandler } from './middleware/errorMiddleware.js';
 
 
 // Inicialización de la aplicación y la base de datos
@@ -30,10 +30,10 @@ app.use(passport.session());
 app.use(mainRouter);
 
 // Middleware para inyectar el usuario en el contexto de las respuestas
-app.use((req, res, next) => {
-  res.locals.user = req.session.user;
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.user = req.session.user;
+//   next();
+// });
 
 // Punto de terminación raíz que muestra productos
 app.get('/', renderProducts);
@@ -48,5 +48,8 @@ server.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-// Exportar 'io' si es necesario para otros módulos
+
+app.use(errorHandler);
+
+
 export { io };

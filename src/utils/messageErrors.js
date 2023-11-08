@@ -40,3 +40,9 @@ export const authorization = (rol) => {
     }
 
 }
+
+export const errorMessages = {
+    PRODUCT_CREATION_ERROR: 'Error al crear el producto.',
+    ADD_TO_CART_ERROR: 'Error al agregar al carrito.',
+    // ... más mensajes de error personalizados
+  };

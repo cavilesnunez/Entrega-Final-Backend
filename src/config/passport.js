@@ -20,7 +20,7 @@ const initializePassport = () => {
       try {
         const userExists = await userModel.findOne({ email });
         if (userExists) {
-          return done(null, false, { message: 'Email already registered.' });
+          return done(null, false, { message: 'Correo electrónico ya registrado.' });
         }
         const passwordHash = createHash(password);
         const newUser = await userModel.create({
@@ -42,7 +42,7 @@ const initializePassport = () => {
       try {
         const user = await userModel.findOne({ email });
         if (!user || !validatePassword(password, user.password)) {
-          return done(null, false, { message: 'Incorrect email or password.' });
+          return done(null, false, { message: 'Correo o contraseña incorrectos.' });
         }
         return done(null, user);
       } catch (error) {
@@ -60,7 +60,7 @@ const initializePassport = () => {
       let user = await userModel.findOne({ githubId: profile.id });
       if (!user) {
         user = await userModel.create({
-          first_name: profile.displayName || 'GitHub User',
+          first_name: profile.displayName || 'Usuario de Github',
           last_name: '',
           email: profile._json.email,
           githubId: profile.id,
