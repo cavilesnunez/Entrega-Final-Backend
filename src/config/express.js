@@ -1,6 +1,5 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
-import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';

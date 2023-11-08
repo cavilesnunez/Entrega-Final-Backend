@@ -1,9 +1,16 @@
-import 'dotenv/config'; // Esto carga las variables de entorno al principio del archivo.
+import 'dotenv/config';
+
 import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { createHash, validatePassword } from '../utils/bcrypt.js';
 import userModel from '../models/users.model.js';
+
+
+console.log("CLIENT_ID: ", process.env.GITHUB_CLIENT_ID); // Debería mostrar el Client ID
+console.log("CLIENT_SECRET: ", process.env.GITHUB_CLIENT_SECRET); // Debería mostrar el Client Secret
+console.log("CALLBACK_URL: ", process.env.GITHUB_CALLBACK_URL); // Debería mostrar la Callback URL
+
 
 const initializePassport = () => {
   passport.use('register', new LocalStrategy(
