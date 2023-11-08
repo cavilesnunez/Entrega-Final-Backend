@@ -1,6 +1,7 @@
 // Importaciones de configuraciones y utilidades
 import 'dotenv/config.js'
 import express from 'express';
+import { engine } from 'express-handlebars';
 import http from 'http';
 import passport from 'passport'; // Asegúrate de importar passport
 import { connectDB } from './config/db.js';
@@ -9,22 +10,29 @@ import { setupSession } from './config/session.js';
 import initializePassport from './config/passport.js';
 import setupWebSocket from './sockets/index.js';
 import mainRouter from './routes/index.js';
-import { renderProducts } from './controllers/product.controller.js'; // Asegúrate de que esta función esté definida en este archivo
+// import { renderProducts } from './controllers/product.controller.js'; // Asegúrate de que esta función esté definida en este archivo
 import { errorHandler } from './middleware/errorMiddleware.js';
-
+import productRouter from './routes/products.routes.js'; // Asegúrate de importar el router de productos
 
 // Inicialización de la aplicación y la base de datos
 connectDB();
 
 const app = express();
 
+
+
 // Configuración de Express y middlewares
 setupExpress(app);
 setupSession(app); // Llama a esta función solo una vez y después de configurar express
 initializePassport();
 
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Directorio público para archivos estáticos
+app.use(express.static('./src/public'));
+
 
 // Rutas principales
 app.use(mainRouter);
@@ -35,8 +43,10 @@ app.use(mainRouter);
 //   next();
 // });
 
-// Punto de terminación raíz que muestra productos
-app.get('/', renderProducts);
+// // Punto de terminación raíz que muestra productos
+// app.get('/', renderProducts);
+// Usar el router de productos para la ruta raíz
+app.use('/', productRouter); 
 
 // Configuración del servidor HTTP y WebSocket
 const server = http.createServer(app);
