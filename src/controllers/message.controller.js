@@ -1,5 +1,5 @@
 import messageModel from '../models/messages.model.js';
-import {logger}  from '../utils/logger.js';
+import logger  from '../utils/logger.js';
 
 
 const postMessage = async (req, res) => {

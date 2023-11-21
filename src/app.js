@@ -15,7 +15,7 @@ import { errorHandler } from './middleware/errorMiddleware.js';
 import productRouter from './routes/products.routes.js'; // Asegúrate de importar el router de productos
 
 //Logger
-import {logger} from './utils/logger.js';
+import logger from './utils/logger.js';
 
 logger.info('La aplicación se está iniciando...');
 

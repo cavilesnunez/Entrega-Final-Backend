@@ -1,5 +1,5 @@
 import Cart from '../models/carts.model.js';
-import {logger}  from '../utils/logger.js';
+import logger  from '../utils/logger.js';
 
 export const createCart = async (req, res) => {
     try {

@@ -1,7 +1,7 @@
 import Product from '../models/products.model.js';
 import CustomError from '../utils/customError.js';
 import { errorMessages } from '../utils/messageErrors.js';
-import {logger} from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 
 export const createProduct = async (req, res, next) => {

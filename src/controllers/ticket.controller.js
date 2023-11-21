@@ -1,5 +1,5 @@
 import ticket from "../models/ticket.model.js";
-import {logger} from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 
 // Crear un nuevo ticket
