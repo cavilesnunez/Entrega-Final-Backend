@@ -1,24 +1,26 @@
-// authMiddleware.js
+import {logger} from '../utils/logger.js';
+
 
 const authMiddleware = {
-    // Middleware para verificar si el usuario es administrador
     isAdmin: (req, res, next) => {
       if (req.user && req.user.role === 'admin') {
-        next(); // Si es admin, procede al siguiente middleware o al controlador
+        logger.info(`Acceso de administrador concedido al usuario: ${req.user.id}`);
+        next();
       } else {
+        logger.warning(`Intento de acceso de administrador denegado: Usuario ${req.user ? req.user.id : 'no identificado'}`);
         res.status(403).json({ message: 'Acceso denegado. Se requiere rol de administrador.' });
       }
     },
   
-    // Middleware para verificar si el usuario es un usuario normal
     isUser: (req, res, next) => {
       if (req.user && req.user.role === 'user') {
-        next(); // Si es usuario, procede al siguiente middleware o al controlador
+        logger.info(`Acceso de usuario concedido al usuario: ${req.user.id}`);
+        next();
       } else {
+        logger.warning(`Intento de acceso de usuario denegado: Usuario ${req.user ? req.user.id : 'no identificado'}`);
         res.status(403).json({ message: 'Acceso denegado. Se requiere rol de usuario.' });
       }
     },
-  };
-  
-  export default authMiddleware;
-  
+};
+
+export default authMiddleware;

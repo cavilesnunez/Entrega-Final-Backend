@@ -14,6 +14,12 @@ import mainRouter from './routes/index.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 import productRouter from './routes/products.routes.js'; // Asegúrate de importar el router de productos
 
+//Logger
+import {logger} from './utils/logger.js';
+
+logger.info('La aplicación se está iniciando...');
+
+
 // Inicialización de la aplicación y la base de datos
 connectDB();
 
