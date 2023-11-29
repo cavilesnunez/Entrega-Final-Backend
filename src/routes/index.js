@@ -5,7 +5,7 @@ import userRoutes from './users.routes.js';
 import sessionRoutes from './sessions.routes.js';
 import messageRoutes from './messages.routes.js';
 import ticketsRoutes from './tickets.routes.js';
-
+import passwordRoutes from './password.routes.js';
 
 const router = Router();
 
@@ -16,5 +16,6 @@ router.use('/users', userRoutes);
 router.use('/api/sessions', sessionRoutes);
 router.use('/api/messages', messageRoutes);
 router.use('/api/tickets', ticketsRoutes);
+router.use('/api/password', passwordRoutes);
 
 export default router;

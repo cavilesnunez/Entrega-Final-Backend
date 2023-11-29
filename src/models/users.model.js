@@ -26,7 +26,9 @@ const userSchema = new Schema({
     age: {
         type: Number,
         required: true
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 })
 
 export const userModel = model('users', userSchema)
