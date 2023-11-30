@@ -1,6 +1,7 @@
 import express from 'express';
-import { forgotPassword, resetPassword } from '../controllers/password.controller.js';
-import userModel from '../models/user.model.js';
+import passwordController from '../controllers/password.controller.js';
+
+const { forgotPassword, resetPassword } = passwordController;
 
 
 

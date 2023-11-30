@@ -1,5 +1,5 @@
 // Importa el modelo de usuario
-import userModel from '../models/user.model.js';
+import userModel from '../models/users.model.js';
 
 // Importa el módulo de cifrado de contraseñas
 import { randomBytes } from 'crypto';
