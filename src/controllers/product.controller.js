@@ -92,8 +92,12 @@ export const getProductById = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     try {
-        const productData = req.body;
+        const productData = {
+            ...req.body,
+            owner: req.user?.email || 'admin'  // Asigna el propietario al producto
+        };
         const newProduct = await Product.create(productData);
+
         res.json(newProduct);
         logger.info('Nuevo producto agregado');
     } catch (error) {
@@ -101,6 +105,7 @@ export const addProduct = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 export const updateProduct = async (req, res) => {
     try {
@@ -127,19 +132,27 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.pid;
-        const deletedProduct = await Product.findByIdAndDelete(productId);
+        const product = await Product.findById(productId);
 
-        if (!deletedProduct) {
+        if (!product) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        res.status(200).send("Producto eliminado correctamente.");
-        logger.info(`Producto eliminado: ID ${req.params.pid}`);
+        if (req.user.role === 'admin' || product.owner === req.user.email) {
+            await Product.findByIdAndDelete(productId);
+            res.status(200).send("Producto eliminado correctamente.");
+            logger.info(`Producto eliminado: ID ${productId}`);
+        } else {
+            res.status(403).json({ error: 'No tienes permiso para eliminar este producto' });
+            logger.warning(`Intento de eliminación no autorizado para el producto ID ${productId}`);
+        }
+
     } catch (error) {
         logger.error(`Error al eliminar producto: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 };
+
 
 export const renderProducts = async (req, res) => {
     try {

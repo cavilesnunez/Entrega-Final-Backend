@@ -10,7 +10,7 @@ const customLevels = {
     },
     colors: {
         fatal: 'red',
-        error: 'orange',
+        error: 'red',  // Cambiado de 'orange' a 'red'
         warning: 'yellow',
         info: 'blue',
         debug: 'white'
@@ -23,7 +23,7 @@ const logger = winston.createLogger({
     levels: customLevels.levels,
     transports: [
         new winston.transports.Console({
-            level: 'info',
+            level: 'debug', // Ajusta el nivel según tus necesidades
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.simple()
@@ -31,7 +31,7 @@ const logger = winston.createLogger({
         }),
         new winston.transports.File({
             filename: 'logs/error.log',
-            level: 'warning'
+            level: 'error'  // Ajusta el nivel según tus necesidades
         })
     ]
 });

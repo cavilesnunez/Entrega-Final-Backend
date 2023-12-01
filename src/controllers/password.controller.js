@@ -1,4 +1,5 @@
 // Importa el modelo de usuario
+import 'dotenv/config';
 import userModel from '../models/users.model.js';
 
 // Importa el módulo de cifrado de contraseñas
@@ -25,12 +26,16 @@ const passwordController = {
 
             // Configura el transporte para el envío de correos electrónicos
             const transporter = createTransport({
-                service: 'gmail', // Asegúrate de cambiar esto según tu configuración
+                service: 'gmail',
                 auth: {
-                    user: 'your-email@example.com', // Usa variables de entorno en producción
-                    pass: 'your-password'
+                    user: process.env.EMAIL_USER, // Usa la variable de entorno
+                    pass: process.env.EMAIL_PASS  // Usa la variable de entorno
                 }
             });
+
+            console.log('Email:', process.env.EMAIL_USER);
+            console.log('Password:', process.env.EMAIL_PASS);
+
 
             // Configura las opciones del correo electrónico
             const mailOptions = {

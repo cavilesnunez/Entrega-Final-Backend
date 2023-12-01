@@ -31,11 +31,17 @@ const productSchema = new Schema({
         required: true,
         unique: true
     },
-    thumbnails: []
+    owner: {
+        type: String,
+        required: true,
+        default: 'admin'
+    },
+    thumbnails: [],
+    
 })
 
 productSchema.plugin(mongoosePaginate);
 
-const productModel = model('products', productSchema)
+const productModel = model('products', productSchema);
 
-export default productModel 
+export default productModel;

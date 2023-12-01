@@ -1,48 +1,30 @@
-import { Router } from "express";
-import passport from "passport";
-const sessionRouter = Router()
+import express from 'express';
+import passport from 'passport'; // Asegúrate de que passport esté configurado correctamente
+import { generateToken } from '../utils/jwt.js';
+
+const sessionRouter = express.Router();
 
 sessionRouter.post('/login', passport.authenticate('login'), async (req, res) => {
     try {
         if (!req.user) {
-            return res.status(401).send({ mensaje: "Invalidate user" })
+            return res.status(401).send({ mensaje: "Usuario no válido" });
         }
 
-        req.session.user = {
+        // Generar Token JWT
+        const token = generateToken({ 
+            id: req.user._id,
             first_name: req.user.first_name,
             last_name: req.user.last_name,
-            age: req.user.age,
-            email: req.user.email
-        }
+            email: req.user.email,
+            role: req.user.role // Asegúrate de que el usuario tenga un campo 'role'
+        });
 
-        res.status(200).send({ payload: req.user })
+        // Enviar token al cliente
+        res.status(200).send({ token });
     } catch (error) {
-        res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` })
+        res.status(500).send({ mensaje: `Error al iniciar sesión ${error}` });
     }
-})
-
-sessionRouter.get('/testJWT', passport.authenticate('jwt', { session: true }), async (req, res) => {
-    res.status(200).send({ mensaje: req.user })
-    req.session.user = {
-        first_name: req.user.user.first_name,
-        last_name: req.user.user.last_name,
-        age: req.user.user.age,
-        email: req.user.user.email
-    }
-})
-
-sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {
-    console.log(req.user)
-    res.status(200).send({ mensaje: 'Usuario creado' })
-})
+});
 
 
-
-
-sessionRouter.get('/githubSession', passport.authenticate('github'), async (req, res) => {
-    req.session.user = req.user
-    res.status(200).send({ mensaje: 'Session creada' })
-})
-
-
-export default sessionRouter
+export default sessionRouter;

@@ -13,6 +13,8 @@ import mainRouter from './routes/index.js';
 // import { renderProducts } from './controllers/product.controller.js'; // Asegúrate de que esta función esté definida en este archivo
 import { errorHandler } from './middleware/errorMiddleware.js';
 import productRouter from './routes/products.routes.js'; // Asegúrate de importar el router de productos
+import passwordRoutes from './routes/password.routes.js';
+
 
 //Logger
 import logger from './utils/logger.js';
@@ -36,6 +38,9 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Usar las rutas de contraseña
+app.use(passwordRoutes);
+
 // Directorio público para archivos estáticos
 app.use(express.static('./src/public'));
 
@@ -43,11 +48,11 @@ app.use(express.static('./src/public'));
 // Rutas principales
 app.use(mainRouter);
 
-// Middleware para inyectar el usuario en el contexto de las respuestas
-// app.use((req, res, next) => {
-//   res.locals.user = req.session.user;
-//   next();
-// });
+app.use((req, res, next) => {
+  res.locals.user = req.user; // Asegúrate de que req.user esté definido por tu middleware de autenticación
+  next();
+});
+
 
 // // Punto de terminación raíz que muestra productos
 // app.get('/', renderProducts);
