@@ -1,0 +1,39 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtener todos los Productos
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Productos obtenidos satisfactoriamente
+        '500':
+          description: Error interno del servidor al obtener los Productos
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID del Producto
+        name:
+          type: string
+          description: Nombre del Producto
+        description:
+          type: string
+          description: Descripción del Producto
+        price:
+          type: number
+          format: float
+          description: Precio del Producto
+        image:
+          type: string
+          description: Imagen del Producto
+      example:
+        id: 1
+        name: "Producto 1"
+        description: "Descripción del Producto 1"
+        price: 1000
+        image: "https://picsum.photos/200/300"

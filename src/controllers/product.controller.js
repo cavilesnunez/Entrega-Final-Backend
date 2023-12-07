@@ -3,6 +3,41 @@ import CustomError from '../utils/customError.js';
 import { errorMessages } from '../utils/messageErrors.js';
 import logger from '../utils/logger.js';
 
+/**
+ * @swagger
+ * /productos:
+ *   post:
+ *     summary: Crea un nuevo producto
+ *     description: Crea un nuevo producto y lo agrega a la base de datos.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               stock:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *               thumbnails:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       201:
+ *         description: Producto creado exitosamente
+ */
 
 export const createProduct = async (req, res, next) => {
     try {
@@ -33,7 +68,36 @@ export const createProduct = async (req, res, next) => {
     }
 };
 
-
+/**
+ * @swagger
+ * /productos:
+ *   get:
+ *     summary: Retorna una lista paginada de productos
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Límite de productos por página
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Orden de los productos por precio ('asc' o 'desc')
+ *       - in: query
+ *         name: query
+ *         schema:
+ *           type: string
+ *         description: Consulta para filtrar productos
+ *     responses:
+ *       200:
+ *         description: Lista paginada de productos
+ */
 
 export const getProducts = async (req, res) => {
     try {
@@ -73,6 +137,28 @@ export const getProducts = async (req, res) => {
     }
 };
 
+
+
+/**
+ * @swagger
+ * /productos/{id}:
+ *   get:
+ *     summary: Obtiene un producto por su ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del producto a obtener
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Detalles del producto
+ *       404:
+ *         description: Producto no encontrado
+ */
+
+
 export const getProductById = async (req, res) => {
     try {
         const productId = req.params.pid;
@@ -90,6 +176,25 @@ export const getProductById = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * /productos/add:
+ *   post:
+ *     summary: Agrega un producto
+ *     description: Agrega un nuevo producto a la base de datos.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: Producto agregado exitosamente
+ */
+
+
 export const addProduct = async (req, res) => {
     try {
         const productData = {
@@ -105,6 +210,32 @@ export const addProduct = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /productos/{id}:
+ *   put:
+ *     summary: Actualiza un producto
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del producto a actualizar
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: Producto actualizado exitosamente
+ *       404:
+ *         description: Producto no encontrado
+ */
 
 
 export const updateProduct = async (req, res) => {
@@ -128,6 +259,29 @@ export const updateProduct = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /productos/{id}:
+ *   delete:
+ *     summary: Elimina un producto
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del producto a eliminar
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Producto eliminado exitosamente
+ *       404:
+ *         description: Producto no encontrado
+ *       403:
+ *         description: No autorizado para eliminar el producto
+ */
+
 
 export const deleteProduct = async (req, res) => {
     try {
@@ -153,6 +307,17 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * /productos/render:
+ *   get:
+ *     summary: Renderiza los productos en una vista
+ *     description: Obtiene productos y los renderiza en una página HTML.
+ *     responses:
+ *       200:
+ *         description: Página HTML con productos renderizados
+ */
 
 export const renderProducts = async (req, res) => {
     try {

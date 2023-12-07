@@ -1,6 +1,21 @@
 import Cart from '../models/carts.model.js';
 import logger  from '../utils/logger.js';
 
+
+/**
+ * @swagger
+ * /carrito:
+ *   post:
+ *     summary: Crea un nuevo carrito de compras
+ *     description: Crea un nuevo carrito de compras vacío.
+ *     responses:
+ *       200:
+ *         description: Carrito de compras creado exitosamente
+ *       500:
+ *         description: Error del servidor
+ */
+
+
 export const createCart = async (req, res) => {
     try {
         const newCart = await Cart.create({ products: [] });
@@ -11,6 +26,42 @@ export const createCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /carrito/{cid}/producto/{pid}:
+ *   post:
+ *     summary: Agrega un producto al carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: pid
+ *         required: true
+ *         description: ID del producto
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Producto agregado al carrito
+ *       404:
+ *         description: Carrito o producto no encontrado
+ */
+
 
 export const addProductToCart = async (req, res) => {
     try {
@@ -46,6 +97,27 @@ export const addProductToCart = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * /carrito/{cid}:
+ *   get:
+ *     summary: Obtiene un carrito por su ID
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Detalles del carrito
+ *       404:
+ *         description: Carrito no encontrado
+ */
+
+
 export const getCartById = async (req, res) => {
     try {
         const cartId = req.params.cid;
@@ -66,6 +138,27 @@ export const getCartById = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * /carrito/{cid}/productos:
+ *   get:
+ *     summary: Obtiene los productos en un carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de productos en el carrito
+ *       404:
+ *         description: Carrito no encontrado
+ */
+
+
 export const getProductsInCart = async (req, res) => {
     try {
         const cartId = req.params.cid;
@@ -85,6 +178,43 @@ export const getProductsInCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /carrito/{cid}:
+ *   put:
+ *     summary: Actualiza un carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               products:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id_prod:
+ *                       type: string
+ *                     quantity:
+ *                       type: number
+ *     responses:
+ *       200:
+ *         description: Carrito actualizado
+ *       404:
+ *         description: Carrito no encontrado
+ */
+
 
 export const updateCart = async (req, res) => {
     try {
@@ -110,6 +240,42 @@ export const updateCart = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * /carrito/{cid}/producto/{pid}:
+ *   put:
+ *     summary: Actualiza la cantidad de un producto en el carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: pid
+ *         required: true
+ *         description: ID del producto
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Cantidad del producto actualizada
+ *       404:
+ *         description: Carrito o producto no encontrado
+ */
+
+
 export const updateProductQuantityInCart = async (req, res) => {
     try {
         const cartId = req.params.cid;
@@ -134,6 +300,33 @@ export const updateProductQuantityInCart = async (req, res) => {
         res.status(404).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /carrito/{cid}/producto/{pid}:
+ *   delete:
+ *     summary: Elimina un producto del carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: pid
+ *         required: true
+ *         description: ID del producto
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Producto eliminado del carrito
+ *       404:
+ *         description: Carrito o producto no encontrado
+ */
+
 
 export const deleteProductFromCart = async (req, res) => {
     try {
@@ -162,6 +355,27 @@ export const deleteProductFromCart = async (req, res) => {
         res.status(404).json({ error: error.message });
     }
 };
+
+
+/**
+ * @swagger
+ * /carrito/{cid}/limpiar:
+ *   put:
+ *     summary: Limpia todos los productos del carrito
+ *     parameters:
+ *       - in: path
+ *         name: cid
+ *         required: true
+ *         description: ID del carrito
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Carrito limpiado
+ *       404:
+ *         description: Carrito no encontrado
+ */
+
 
 export const clearCart = async (req, res) => {
     try {
