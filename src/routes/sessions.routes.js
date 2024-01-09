@@ -1,5 +1,7 @@
+// sessions.routes.js
+
 import express from 'express';
-import passport from 'passport'; // Asegúrate de que passport esté configurado correctamente
+import passport from 'passport';
 import { generateToken } from '../utils/jwt.js';
 
 const sessionRouter = express.Router();
@@ -12,12 +14,15 @@ sessionRouter.post('/login', passport.authenticate('login'), async (req, res) =>
 
         // Generar Token JWT
         const token = generateToken({ 
-            id: req.user._id,
+            id: req.user.id,
             first_name: req.user.first_name,
             last_name: req.user.last_name,
             email: req.user.email,
-            role: req.user.role // Asegúrate de que el usuario tenga un campo 'role'
+            role: req.user.role
         });
+
+        // Imprimir el token generado en la consola del servidor
+        console.log(`Token generado: ${token}`);
 
         // Enviar token al cliente
         res.status(200).send({ token });
@@ -25,6 +30,5 @@ sessionRouter.post('/login', passport.authenticate('login'), async (req, res) =>
         res.status(500).send({ mensaje: `Error al iniciar sesión ${error}` });
     }
 });
-
 
 export default sessionRouter;

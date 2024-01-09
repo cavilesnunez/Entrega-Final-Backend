@@ -22,6 +22,6 @@ export const setupSession = (app) => {
     secret: 'este es un secreto muy seguro', // Reemplaza este texto con tu propio secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true } // Establecer en true si estás usando https
+    cookie: { secure: false } // Establecer en true si estás usando https
   }));
 };
